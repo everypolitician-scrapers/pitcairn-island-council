@@ -62,11 +62,10 @@ def scrape_list(url, term)
       term: term,
       source: url,
     }
-    puts data
     ScraperWiki.save_sqlite([:name, :term], data)
   end
 end
 
 scrape_table_elected('https://en.wikipedia.org/wiki/Pitcairn_Islands_general_election,_2013', '2013')
 scrape_list('https://en.wikipedia.org/wiki/Pitcairn_Islands_general_election,_2011', '2011')
-scrape_table_green('https://en.wikipedia.org/wiki/Pitcairn_Islands_general_election,_2009', '2013')
+scrape_table_green('https://en.wikipedia.org/wiki/Pitcairn_Islands_general_election,_2009', '2009')
