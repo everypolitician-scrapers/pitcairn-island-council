@@ -1,5 +1,6 @@
 #!/bin/env ruby
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'nokogiri'
 require 'open-uri'
@@ -11,7 +12,7 @@ OpenURI::Cache.cache_path = '.cache'
 
 class String
   def tidy
-    self.gsub(/[[:space:]]+/, ' ').strip
+    gsub(/[[:space:]]+/, ' ').strip
   end
 end
 
@@ -23,14 +24,14 @@ def scrape_table_elected(url, term)
   noko = noko_for(url)
   noko.xpath('//h3[contains(.,"Island Council")]/following-sibling::table[1]/tr[td[contains(.,"Elected")]]').each do |tr|
     tds = tr.css('td')
-    data = { 
-      name: tds[0].text.tidy,
+    data = {
+      name:     tds[0].text.tidy,
       wikiname: tds[0].css('a[href*="/wiki/"]/@title').text,
-      party: 'Independent',
-      term: term,
-      source: url,
+      party:    'Independent',
+      term:     term,
+      source:   url,
     }
-    ScraperWiki.save_sqlite([:name, :term], data)
+    ScraperWiki.save_sqlite(%i(name term), data)
   end
 end
 
@@ -38,14 +39,14 @@ def scrape_table_green(url, term)
   noko = noko_for(url)
   noko.xpath('//h3[contains(.,"Island Council")]/following-sibling::table[1]//tr[@bgcolor="#CCFFCC"]').each do |tr|
     tds = tr.css('td')
-    data = { 
-      name: tds[0].text.tidy,
+    data = {
+      name:     tds[0].text.tidy,
       wikiname: tds[0].css('a[href*="/wiki/"]/@title').text,
-      party: 'Independent',
-      term: term,
-      source: url,
+      party:    'Independent',
+      term:     term,
+      source:   url,
     }
-    ScraperWiki.save_sqlite([:name, :term], data)
+    ScraperWiki.save_sqlite(%i(name term), data)
   end
 end
 
@@ -54,14 +55,14 @@ def scrape_list(url, term)
   section = noko.xpath('//h2[contains(.,"Results")]')
   ul = section.xpath('following-sibling::h2 | following-sibling::ul').slice_before { |e| e.name == 'h2' }.first.first
   ul.css('li').each do |li|
-    data = { 
-      name: li.text.tidy,
+    data = {
+      name:     li.text.tidy,
       wikiname: li.css('a[href*="/wiki/"]/@title').text,
-      party: 'Independent',
-      term: term,
-      source: url,
+      party:    'Independent',
+      term:     term,
+      source:   url,
     }
-    ScraperWiki.save_sqlite([:name, :term], data)
+    ScraperWiki.save_sqlite(%i(name term), data)
   end
 end
 
